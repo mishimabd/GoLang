@@ -76,9 +76,17 @@ func GetOneUser(c *gin.Context) {
 	//initialize bd for users
 	initializers.Database.First(&user, id)
 	//respond
-	c.JSON(200, gin.H{
-		"users": user,
-	})
+
+	if user.ID == 0 {
+		c.JSON(http.StatusNotAcceptable, gin.H{
+			"message": "there is no user with id like this",
+		})
+		c.Abort()
+	} else {
+		c.JSON(200, gin.H{
+			"users": user,
+		})
+	}
 }
 
 func UpdateOneUser(c *gin.Context) {
